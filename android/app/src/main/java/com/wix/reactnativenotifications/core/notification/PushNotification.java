@@ -66,6 +66,8 @@ public class PushNotification implements IPushNotification {
         notifyReceivedToJS();
         if (mAppLifecycleFacade.isAppVisible()) {
             notifiyReceivedForegroundNotificationToJS();
+        } else {
+            openAppIfRegisterDataMessage();
         }
     }
 
@@ -186,6 +188,14 @@ public class PushNotification implements IPushNotification {
 
     protected int createNotificationId(Notification notification) {
         return (int) System.nanoTime();
+    }
+
+    private void openAppIfRegisterDataMessage() {
+        Log.d(LOGTAG, "Should I open: " + mNotificationProps.asBundle().getString("register"));
+        if ("true".equals(mNotificationProps.asBundle().getString("register"))) {
+            Log.d(LOGTAG, "opening app");
+            launchOrResumeApp();
+        }
     }
 
     private void notifyReceivedToJS() {
